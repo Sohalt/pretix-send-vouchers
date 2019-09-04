@@ -1,0 +1,36 @@
+{% extends "pretixcontrol/event/base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+{% block title %}{% trans "Send Vouchers" %}{% endblock %}
+{% block content %}
+<h1>{% trans "Send Vouchers" %}</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    {% bootstrap_field form.recipients %}
+    {% bootstrap_field form.subject %}
+    {% bootstrap_field form.message %}
+
+    {% if request.method == "POST" %}
+    <fieldset>
+        <legend>{% trans "E-mail preview" %}</legend>
+        <div class="tab-pane mail-preview-group">
+            {% for locale, out in output.items %}
+            <div lang="{{ locale }}" class="mail-preview">
+                <strong>{{ out.subject }}</strong><br><br>
+                {{ out.html|safe }}
+            </div>
+            {% endfor %}
+        </div>
+    </fieldset>
+    {% endif %}
+
+    <div class="form-group submit-group">
+        <button type="submit" class="btn btn-default btn-save pull-left" name="action" value="preview">
+            {% trans "Preview email" %}
+        </button>
+        <button type="submit" class="btn btn-primary btn-save">
+            {% trans "Send" %}
+        </button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,3 @@
+recursive-include pretix_send_vouchers/static *
+recursive-include pretix_send_vouchers/templates *
+recursive-include pretix_send_vouchers/locale *
