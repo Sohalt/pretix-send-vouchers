@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-07 19:01+0100\n"
+"POT-Creation-Date: 2019-09-10 15:12+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: sohalt\n"
 "Language-Team: \n"
@@ -10,3 +10,96 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: pretix_send_vouchers/__init__.py:13
+msgid "Pretix Send Vouchers"
+msgstr "Pretix Gutscheine Versenden"
+
+#: pretix_send_vouchers/__init__.py:15
+msgid "A plugin to send vouchers to a list of e-mail addresses"
+msgstr "Ein Plugin um Gutscheine an eine Liste von E-Mail-Adressen zu schicken"
+
+#: pretix_send_vouchers/forms.py:32
+msgid ""
+"Invalid placeholder syntax: You used a different number of \"{\" than of "
+"\"}\"."
+msgstr ""
+"Ungültige Platzhalter-Syntax: Es müssen gleich viele \"{\" wie \"}\" "
+"vorkommen."
+
+#: pretix_send_vouchers/forms.py:43
+#, python-format
+msgid "Invalid placeholder(s): %(value)s"
+msgstr "Ungültige(r) Platzhalter: %(value)s"
+
+#: pretix_send_vouchers/forms.py:56
+msgid "Add one E-mail per line."
+msgstr "Gib eine E-Mail-Adresse pro Zeile ein."
+
+#: pretix_send_vouchers/forms.py:68
+msgid "Recipients"
+msgstr "Empfänger"
+
+#: pretix_send_vouchers/forms.py:72 pretix_send_vouchers/forms.py:85
+msgid "Subject"
+msgstr "Betreff"
+
+#: pretix_send_vouchers/forms.py:76 pretix_send_vouchers/forms.py:92
+msgid "Message"
+msgstr "Nachricht"
+
+#: pretix_send_vouchers/forms.py:88 pretix_send_vouchers/forms.py:95
+msgid ""
+"Available placeholders: {event}, {voucher.&lt;tag&gt;.&lt;n&gt;} where &lt;"
+"tag&gt; is a voucher tag and &lt;n&gt; is a number"
+msgstr ""
+"Verfügbare Platzhalter: {event}, {voucher.&lt;tag&gt;.&lt;n&gt;}, wobei &lt;"
+"tag&gt; ein Gutschein-Tag und &lt;n&gt; eine Zahl ist"
+
+#: pretix_send_vouchers/signals.py:16
+msgid "Send out vouchers"
+msgstr "Gutscheine versenden"
+
+#: pretix_send_vouchers/signals.py:31
+msgid "Email was sent"
+msgstr "E-Mail wurde versendet"
+
+#: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:4
+#: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:6
+msgid "Send Vouchers"
+msgstr "Gutscheine versenden"
+
+#: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:15
+msgid "E-mail preview"
+msgstr "E-Mail-Vorschau"
+
+#: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:29
+msgid "Preview email"
+msgstr "E-Mail-Vorschau"
+
+#: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:32
+msgid "Send"
+msgstr "Senden"
+
+#: pretix_send_vouchers/views.py:32
+msgid "We could not send the email. See below for details."
+msgstr ""
+"Wir könnten die E-Mail nicht senden, siehe weiter unten für weitere "
+"Informationen."
+
+#: pretix_send_vouchers/views.py:41
+msgid "You have not provided any recipients."
+msgstr "Du hast keine Empfänger angegeben."
+
+#: pretix_send_vouchers/views.py:62
+#, python-brace-format
+msgid "Subject: {subject}"
+msgstr "Betreff: {subject}"
+
+#: pretix_send_vouchers/views.py:80
+msgid ""
+"Your message has been queued and will be sent to the provided addresses in "
+"the next minutes."
+msgstr ""
+"Die Nachricht wurde gespeichert und wird in den nächsten Minuten an die "
+"angegebenen Adressen versendet."
