@@ -46,14 +46,14 @@ def build_voucher_template_dict(event, template, how_shared=None):
 
     for tag in d:
         vs = vouchers.filter(tag=tag)[:len(d[tag])]
-        for i,tag in enumerate(d.keys()):
+        for i,idx in enumerate(d[tag].keys()):
             try:
                 v = vs[i]
                 exclude.append(v.pk)
             except IndexError:
                 #TODO maybe raise custom error?
                 v = None
-            d[tag] = v
+            d[tag][idx] = v
             if how_shared:
                 VoucherMarking(v,how_shared).save()
 
@@ -66,5 +66,7 @@ def build_voucher_template_dict(event, template, how_shared=None):
             #TODO maybe raise custom error?
             v = None
         d['*'][n] = v
+        if how_shared:
+            VoucherMarking(v,how_shared).save()
 
     return d
