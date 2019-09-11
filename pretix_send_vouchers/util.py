@@ -24,6 +24,10 @@ class DictHelper(dict):
         return getattr(super(), k, self.get(k))
 
 
+class NoMatchingVoucher(Exception):
+    pass
+
+
 def build_voucher_template_dict(event, template, how_shared=None):
     """
     Looks for template placeholders of form '{voucher.tag.idx}' and builds a
@@ -51,8 +55,7 @@ def build_voucher_template_dict(event, template, how_shared=None):
                 v = vs[i]
                 exclude.append(v.pk)
             except IndexError:
-                #TODO maybe raise custom error?
-                v = None
+                raise NoMatchingVoucher('Could not find a valid voucher for tag "{}" and index "{}"'.format(tag,idx))
             d[tag][idx] = v
             if how_shared:
                 VoucherMarking(v,how_shared).save()
@@ -63,8 +66,7 @@ def build_voucher_template_dict(event, template, how_shared=None):
         try:
             v = next(vs)
         except StopIteration:
-            #TODO maybe raise custom error?
-            v = None
+            raise NoMatchingVoucher('Could not find a valid voucher for tag "*" and index "{}"'.format(n))
         d['*'][n] = v
         if how_shared:
             VoucherMarking(v,how_shared).save()
