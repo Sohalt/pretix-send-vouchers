@@ -11,9 +11,11 @@ from pretix.base.templatetags.rich_text import markdown_compile_email
 from pretix.control.permissions import EventPermissionRequiredMixin
 from pretix.multidomain.urlreverse import build_absolute_uri
 
+from i18nfield.strings import LazyI18nString
+
 from .forms import MailForm
 from .tasks import send_mails
-from .util import normalize_voucher_template, build_voucher_template_dict
+from .util import normalize_voucher_template, build_voucher_template_dict, NoMatchingVoucher
 
 logger = logging.getLogger('pretix.plugins.send-vouchers')
 
@@ -41,16 +43,26 @@ class SenderView(EventPermissionRequiredMixin, FormView):
             messages.error(self.request, _('You have not provided any recipients.'))
             return self.get(self.request, *self.args, **self.kwargs)
 
+        # normalize voucher templates in subject and message
+        i18n_subject = {}
+        i18n_message = {}
+        for l in self.request.event.settings.locales:
+            with language(l):
+                i18n_subject[l] = normalize_voucher_template(str(form.cleaned_data['subject']))
+                i18n_message[l] = normalize_voucher_template(str(form.cleaned_data['message']))
+        subject = LazyI18nString(i18n_subject)
+        message = LazyI18nString(i18n_message)
+
+        # generate preview
         if self.request.POST.get("action") == "preview":
             for l in self.request.event.settings.locales:
-
                 with language(l):
+                    try:
+                        vouchers = build_voucher_template_dict(self.request.event, str(subject)+str(message))
+                    except NoMatchingVoucher:
+                        messages.error(self.request, _('There are not enough vouchers to fill the template.'))
+                        return self.get(self.request, *self.args, **self.kwargs)
 
-                    subject = form.cleaned_data['subject'].localize(l)
-                    subject = normalize_voucher_template(subject)
-                    message = form.cleaned_data['message'].localize(l)
-                    message = normalize_voucher_template(message)
-                    vouchers = build_voucher_template_dict(self.request.event, subject+message)
                     context_dict = {
                         'event': self.request.event.name,
                         'voucher': vouchers
@@ -65,13 +77,31 @@ class SenderView(EventPermissionRequiredMixin, FormView):
 
             return self.get(self.request, *self.args, **self.kwargs)
 
+        # collect vouchers
+        vouchers = {l:[] for l in self.request.event.settings.locales}
+        for r in recipients:
+            if isinstance(r,tuple):
+                locale, email_address = r
+            else:
+                locale = None
+                email_address = r
+            with language(locale):
+                try:
+                    v = build_voucher_template_dict(self.request.event, str(subject)+str(message))
+                except NoMatchingVoucher:
+                    messages.error(self.request, _('There are not enough vouchers to fill the template.'))
+                    return self.get(self.request, *self.args, **self.kwargs)
+                vouchers[locale].append(v)
+
+        # send e-mails
         send_mails.apply_async(
             kwargs={
-                'recipients': form.cleaned_data['recipients'],
+                'recipients': recipients,
+                'vouchers': vouchers,
                 'event': self.request.event.pk,
                 'user': self.request.user.pk,
-                'subject': form.cleaned_data['subject'].data,
-                'message': form.cleaned_data['message'].data,
+                'subject': subject,
+                'message': message,
             }
         )
         self.request.event.log_action('pretix.plugins.pretix_send_vouchers.sent',

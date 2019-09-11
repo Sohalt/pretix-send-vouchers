@@ -10,7 +10,7 @@ from .util import normalize_voucher_template, build_voucher_template_dict
 
 
 @app.task(base=ProfiledEventTask)
-def send_mails(event: Event, user: int, recipients: list, subject: dict, message: dict) -> None:
+def send_mails(event: Event, user: int, recipients: list, vouchers: dict, subject: dict, message: dict) -> None:
     failures = []
     user = User.objects.get(pk=user) if user else None
     subject = LazyI18nString(subject)
@@ -24,15 +24,9 @@ def send_mails(event: Event, user: int, recipients: list, subject: dict, message
             email_address = r
         try:
             with language(locale):
-                #TODO less hacky
-                subject = normalize_voucher_template(str(subject))
-                message = normalize_voucher_template(str(message))
-                vouchers = build_voucher_template_dict(event, subject+message, how_shared=email_address)
-                subject = LazyI18nString(subject)
-                message = LazyI18nString(message)
                 email_context = {
                     'event': event,
-                    'voucher': vouchers
+                    'voucher': vouchers[locale].pop()
                 }
                 mail(
                     email_address,
