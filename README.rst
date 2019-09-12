@@ -37,6 +37,18 @@ Development setup
    the 'plugins' tab in the settings.
 
 
+Design decisions
+----------------
+
+1. Substituting existing vouchers vs generating new vouchers
+
+The plugin does not create any vouchers itself, instead it looks up already existing vouchers and substitutes them in templates. This has the advantage, that you have more direct control over how many vouchers you are handing out and can easily set an upper limit. Additionally it solves the problem of having to specify, what properties a newly generated voucher should have (e.g. max usages, valid until, etc.). 
+
+2. Eager vs lazy evaluation of voucher placeholders
+
+We are eagerly building the object holding the vouchers for substitution using ``build_voucher_template_dict`` before passing the result to ``format_map``. An alternative approach would be to pass a special ``voucher object`` to ``format_map``, which would then lazily look up vouchers and cache them, when the placeholder gets actually substituted. This has the disadvantage though, that you cannot tell beforehand, if there are enough vouchers of a certain type available. Only when expanding the template, which is done in the ``mail`` function from pretix, do you find out. This is too late to notify the user who initiated the action.
+
+
 License
 -------
 
