@@ -1,7 +1,24 @@
 Pretix Send Vouchers
 ==========================
 
-This is a plugin for `pretix`_. 
+This is a plugin for `pretix`_ to allow sending vouchers to a list of e-mail addresses.
+
+Usage
+-----
+
+Install and enable the plugin, then navigate to the ``Send out vouchers`` menu item.
+
+Here you can provide a list of e-mail addresses, separated by newlines.
+
+In the ``Subject`` and ``Message`` fields you can compose your e-mail and use special placeholders to embed vouchers in your e-mail.
+
+``{voucher}`` and ``{voucher.*}`` gets expanded to an arbitrary voucher, which has never been redeemed and is still valid.
+``{voucher.foo}`` gets expanded to an arbitrary voucher with tag ``foo``, which has never been redeemed and is still valid.
+
+Repeated use of the placeholder will result in the same expansion. To get multiple, different vouchers within the same email, you can use an unique index:
+
+``{voucher.foo.1}`` and ``{voucher.foo.2}`` expand to two different vouchers with tag ``foo``, which have never been redeemed and are still valid.
+
 
 Development setup
 -----------------
