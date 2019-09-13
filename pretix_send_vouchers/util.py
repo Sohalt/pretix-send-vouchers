@@ -38,7 +38,7 @@ def build_voucher_template_dict(event, template, how_shared=None):
     """
     d = DictHelper()
     wildcard = set(re.findall(r'{voucher\.\*\.(\d+)}', template, re.X))
-    tagged = set(re.findall(r'{voucher\.([^}\.\*]).(\d+)}', template, re.X))
+    tagged = set(re.findall(r'{voucher\.([^}\.\*]+).(\d+)}', template, re.X))
     vouchers = event.vouchers.filter(Q(redeemed=0) &
                                      (Q(valid_until__isnull=True) | Q(valid_until__gt=now())) &
                                      Q(marking__isnull=True))
