@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta
 
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import FormView
@@ -80,20 +81,20 @@ class SenderView(EventPermissionRequiredMixin, FormView):
         # collect vouchers
         vouchers = {l:[] for l in self.request.event.settings.locales}
         vouchers.update({None:[]})
-        #TODO atomically in transaction
-        for r in recipients:
-            if isinstance(r,tuple):
-                locale, email_address = r
-            else:
-                locale = None
-                email_address = r
-            with language(locale):
-                try:
-                    v = build_voucher_template_dict(self.request.event, str(subject)+str(message), how_shared=email_address)
-                except NoMatchingVoucher:
-                    messages.error(self.request, _('There are not enough vouchers to fill the template.'))
-                    return self.get(self.request, *self.args, **self.kwargs)
-                vouchers[locale].append(v)
+        try:
+            with transaction.atomic():
+                for r in recipients:
+                    if isinstance(r,tuple):
+                        locale, email_address = r
+                    else:
+                        locale = None
+                        email_address = r
+                    with language(locale):
+                        v = build_voucher_template_dict(self.request.event, str(subject)+str(message), how_shared=email_address)
+                        vouchers[locale].append(v)
+        except NoMatchingVoucher:
+            messages.error(self.request, _('There are not enough vouchers to fill the template.'))
+            return self.get(self.request, *self.args, **self.kwargs)
 
         # send e-mails
         send_mails.apply_async(
