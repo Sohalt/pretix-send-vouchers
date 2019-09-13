@@ -80,6 +80,7 @@ class SenderView(EventPermissionRequiredMixin, FormView):
         # collect vouchers
         vouchers = {l:[] for l in self.request.event.settings.locales}
         vouchers.update({None:[]})
+        #TODO atomically in transaction
         for r in recipients:
             if isinstance(r,tuple):
                 locale, email_address = r
@@ -88,7 +89,7 @@ class SenderView(EventPermissionRequiredMixin, FormView):
                 email_address = r
             with language(locale):
                 try:
-                    v = build_voucher_template_dict(self.request.event, str(subject)+str(message))
+                    v = build_voucher_template_dict(self.request.event, str(subject)+str(message), how_shared=email_address)
                 except NoMatchingVoucher:
                     messages.error(self.request, _('There are not enough vouchers to fill the template.'))
                     return self.get(self.request, *self.args, **self.kwargs)
