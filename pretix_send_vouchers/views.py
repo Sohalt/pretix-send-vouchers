@@ -67,8 +67,8 @@ class SenderView(EventPermissionRequiredMixin, FormView):
                         'event': self.request.event.name,
                         'voucher': vouchers
                     }
-                    preview_subject = subject.format_map(context_dict)
-                    preview_text = markdown_compile_email(message.format_map(context_dict))
+                    preview_subject = str(subject).format_map(context_dict)
+                    preview_text = markdown_compile_email(str(message).format_map(context_dict))
 
                     self.output[l] = {
                         'subject': _('Subject: {subject}').format(subject=preview_subject),
