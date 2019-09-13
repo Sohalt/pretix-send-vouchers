@@ -79,6 +79,7 @@ class SenderView(EventPermissionRequiredMixin, FormView):
 
         # collect vouchers
         vouchers = {l:[] for l in self.request.event.settings.locales}
+        vouchers.update({None:[]})
         for r in recipients:
             if isinstance(r,tuple):
                 locale, email_address = r
