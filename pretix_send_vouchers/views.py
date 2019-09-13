@@ -101,8 +101,8 @@ class SenderView(EventPermissionRequiredMixin, FormView):
                 'vouchers': vouchers,
                 'event': self.request.event.pk,
                 'user': self.request.user.pk,
-                'subject': subject,
-                'message': message,
+                'subject': subject.data,
+                'message': message.data,
             }
         )
         self.request.event.log_action('pretix.plugins.pretix_send_vouchers.sent',
