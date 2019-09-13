@@ -9,7 +9,3 @@ class VoucherMarking(models.Model):
         related_name="marking"
     )
     shared = models.CharField(max_length=255)
-
-    def __init__(self, voucher, how_shared):
-        self.voucher = voucher
-        self.how_shared = how_shared
