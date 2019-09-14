@@ -58,7 +58,7 @@ def build_voucher_template_dict(event, template, how_shared=None):
                 raise NoMatchingVoucher('Could not find a valid voucher for tag "{}" and index "{}"'.format(tag,idx))
             d[tag][idx] = str(v)
             if how_shared:
-                VoucherMarking(voucher=v, shared=how_shared).save()
+                VoucherMarking.create(v, how_shared).save()
 
     d['*'] = DictHelper()
     vs = vouchers.exclude(pk__in=exclude).iterator()
@@ -69,6 +69,6 @@ def build_voucher_template_dict(event, template, how_shared=None):
             raise NoMatchingVoucher('Could not find a valid voucher for tag "*" and index "{}"'.format(n))
         d['*'][n] = str(v)
         if how_shared:
-            VoucherMarking(voucher=v, shared=how_shared).save()
+            VoucherMarking.create(v, how_shared).save()
 
     return d
