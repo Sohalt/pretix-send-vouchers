@@ -107,7 +107,7 @@ class SenderView(EventPermissionRequiredMixin, FormView):
                 'message': message.data,
             }
         )
-        self.request.event.log_action('pretix.plugins.pretix_send_vouchers.sent',
+        self.request.event.log_action('pretix_send_vouchers.email.sent',
                                       user=self.request.user,
                                       data=dict(form.cleaned_data))
         messages.success(self.request, _('Your message has been queued and will be sent to the provided addresses in the next minutes.'))

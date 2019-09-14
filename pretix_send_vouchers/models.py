@@ -13,6 +13,6 @@ class VoucherMarking(models.Model):
     @classmethod
     def create(cls, voucher, how_shared):
         vm = cls(voucher=voucher, shared=how_shared)
-        voucher.comment = "Shared by pretix_send_vouchers with: {}\n{}".format(how_shared, voucher.comment)
+        voucher.log_action('pretix.voucher.shared', {'shared_with': how_shared})
         voucher.save()
         return vm

@@ -36,14 +36,5 @@ def send_mails(event: Event, user: int, recipients: list, vouchers: dict, subjec
                     event,
                     locale=locale
                 )
-                event.log_action(
-                    'pretix.plugins.pretix_send_vouchers.sent',
-                    user=user,
-                    data={
-                        'subject': str(subject).format_map(email_context),
-                        'message': str(message).format_map(email_context),
-                        'recipient': email_address
-                    }
-                )
         except SendMailException:
             failures.append(email_address)

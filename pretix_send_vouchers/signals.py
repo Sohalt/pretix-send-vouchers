@@ -1,3 +1,5 @@
+import json
+
 from django.dispatch import receiver
 from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
@@ -27,8 +29,8 @@ def control_nav_import(sender, request=None, **kwargs):
 
 @receiver(signal=logentry_display)
 def pretixcontrol_logentry_display(sender, logentry, **kwargs):
-    plains = {
-        'pretix.plugins.send_vouchers.sent': _('Email was sent'),
-    }
-    if logentry.action_type in plains:
-        return plains[logentry.action_type]
+    if logentry.action_type == 'pretix_send_vouchers.email.sent':
+        return _('Email was sent')
+    if logentry.action_type == 'pretix.voucher.shared':
+        data = json.loads(logentry.data)
+        return _('Voucher was shared with {shared_with}').format(shared_with=data['shared_with'])
