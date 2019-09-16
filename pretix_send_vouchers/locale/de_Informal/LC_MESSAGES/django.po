@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-10 15:12+0200\n"
+"POT-Creation-Date: 2019-09-16 20:34+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: sohalt\n"
 "Language-Team: \n"
@@ -56,13 +56,18 @@ msgstr ""
 "Verfügbare Platzhalter: {event}, {voucher.&lt;tag&gt;.&lt;n&gt;}, wobei &lt;"
 "tag&gt; ein Gutschein-Tag und &lt;n&gt; eine Zahl ist"
 
-#: pretix_send_vouchers/signals.py:16
+#: pretix_send_vouchers/signals.py:18
 msgid "Send out vouchers"
 msgstr "Gutscheine versenden"
 
-#: pretix_send_vouchers/signals.py:31
+#: pretix_send_vouchers/signals.py:33
 msgid "Email was sent"
 msgstr "E-Mail wurde versendet"
+
+#: pretix_send_vouchers/signals.py:36
+#, python-brace-format
+msgid "Voucher was shared with {shared_with}"
+msgstr "Gutschein wurde mit {shared_with} geteilt"
 
 #: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:4
 #: pretix_send_vouchers/templates/pretix_send_vouchers/send_form.html:6
@@ -81,22 +86,26 @@ msgstr "E-Mail-Vorschau"
 msgid "Send"
 msgstr "Senden"
 
-#: pretix_send_vouchers/views.py:32
+#: pretix_send_vouchers/views.py:35
 msgid "We could not send the email. See below for details."
 msgstr ""
 "Wir könnten die E-Mail nicht senden, siehe weiter unten für weitere "
 "Informationen."
 
-#: pretix_send_vouchers/views.py:41
+#: pretix_send_vouchers/views.py:44
 msgid "You have not provided any recipients."
 msgstr "Sie haben keine Empfänger angegeben."
 
-#: pretix_send_vouchers/views.py:62
+#: pretix_send_vouchers/views.py:64 pretix_send_vouchers/views.py:96
+msgid "There are not enough vouchers to fill the template."
+msgstr "Es gibt nicht genug Gutscheine um alle Platzhalter zu ersestzen"
+
+#: pretix_send_vouchers/views.py:75
 #, python-brace-format
 msgid "Subject: {subject}"
 msgstr "Betreff: {subject}"
 
-#: pretix_send_vouchers/views.py:80
+#: pretix_send_vouchers/views.py:113
 msgid ""
 "Your message has been queued and will be sent to the provided addresses in "
 "the next minutes."
